@@ -1,0 +1,63 @@
+Choice of fold and number of neighbors for Optimal KNN
+========================================================
+author: Anamaria Ahuis
+date: 2 April 2017
+autosize: true
+
+Idea
+========================================================
+- Problem
+
+Finding the ideal number of neighbors and/or folds for kNN algorithms is difficult.
+- Idea
+
+Use knnEval function of the chemometrics package to display and compute the neighbor number for which the erros start increasing.
+- Solution
+
+Build a Shiny application which allows changing the number of neighbors and folds and repeatedly applies the knnEval function on the iris dataset.
+Display the number of neighbors where the errors start increasing.
+This is the optimal parameter.
+
+Code example
+========================================================
+
+```{r}
+library(chemometrics)
+data(iris)
+set.seed(3)
+fx <- 30 # input for the number of neighbors
+kf <- 10 #default number of folds 
+ntrain <- round(nrow(iris)*4/5)
+train <- sample(1:nrow(iris),ntrain)
+training <- iris[train,]
+testing <- iris[-train,]
+        
+knnres <- knnEval(scale(iris[,-5]),iris[,5],train,kfold=kf, knnvec=seq(1,fx,by=1),legpos="bottomright",plotit=FALSE)
+```
+
+The knnEval Plot
+========================================================
+
+```{r, echo=FALSE}
+par(mfrow=c(1,1))
+knnres <- knnEval(scale(iris[,-5]),iris[,5],train,kfold=kf, knnvec=seq(1,fx,by=1),legpos="bottomright")
+```
+
+Notice the point where the cross validated errors start to increase, and its correspondent on the x-axis. This is the number of optimal neighbors.
+
+Using the application
+========================================================
+
+The application can be found at  https://ahuisa.shinyapps.io/attittudes/.
+
+[Have a bit of patience when starting, since the instance must be started too.]
+
+Use the slider to specify the desired number of neighbors.
+
+Input the number of folds in the text box and press OK.
+
+On OK the plot will be refreshed, and the ideal number of neighbors will be computed and displayed.
+
+Use the normal "window close" buttom to close the application.
+
+Enjoy!
